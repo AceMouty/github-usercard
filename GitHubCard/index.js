@@ -3,12 +3,14 @@
            https://api.github.com/users/<your name>
 */
 
+
 /* Step 2: Inspect and study the data coming back, this is YOUR 
    github info! You will need to understand the structure of this 
    data in order to use it to build your component function 
 
    Skip to Step 3.
 */
+
 
 /* Step 4: Pass the data received from Github into your function, 
            create a new component and add it to the DOM as a child of .cards
@@ -21,10 +23,9 @@
           Individual strings to the friendsArray below.
           
           Using that array, iterate over it, requesting data for each user, creating a new card for each
-          user, and adding that card to the DOM.
+					user, and adding that card to the DOM.
 */
 
-const followersArray = [];
 
 /* Step 3: Create a function that accepts a single object as its only argument,
           Using DOM methods and properties, create a component that will return the following DOM element:
@@ -53,3 +54,88 @@ const followersArray = [];
   luishrd
   bigknell
 */
+
+const followersArray = [
+	"tetondan",
+  "dustinmyers",
+  "justsml",
+  "luishrd",
+  "bigknell",
+];
+
+// const followersArray = []
+// axios.get('https://api.github.com/users/AceMouty')
+// 	.then((res) => {
+	
+// 		followersArray.push(res.data);
+
+// 		followersArray.forEach(person => {
+// 			console.log(person)
+// 			cards.appendChild(createCard(person));
+// 		})
+
+// 	})
+
+const cards = document.querySelector('.cards');
+
+followersArray.forEach(person =>{
+	axios.get(`https://api.github.com/users/${person}`)
+	.then((res) => {
+
+		console.log(res);
+		cards.appendChild(createCard(res.data));
+
+	})
+})
+
+function createCard (obj) {
+
+	// Creating Elements
+	const card = document.createElement('div');
+	const cardImg = document.createElement('img');
+	const cardInfo = document.createElement('div');
+	const nameHeader = document.createElement('h3');
+	const userName = document.createElement('p');
+	const location = document.createElement('p');
+	const profile = document.createElement('p');
+	const gitHubLink = document.createElement('a');
+	const followers = document.createElement('p');
+	const following = document.createElement('p');
+	const bio = document.createElement('p');
+
+	//Class Assignments
+	card.classList.add('card');
+	cardInfo.classList.add('card-info');
+	nameHeader.classList.add('name');
+	userName.classList.add('username');
+
+
+	// Content and src/linking
+	cardImg.setAttribute('src', obj.avatar_url);
+	console.log(cardImg)
+	nameHeader.textContent = obj.name;
+	userName.textContent = obj.login;
+	location.textContent = obj.location;
+	profile.textContent ='Profile: ';
+	gitHubLink.textContent = obj.html_url;
+	gitHubLink.setAttribute('href', obj.html_url);
+	followers.textContent = `Followers: ${String(obj.followers)}`;
+	following.textContent = `Following: ${String(obj.following)}`;
+	bio.textContent = obj.bio;
+
+	// Building structure
+	card.appendChild(cardImg);
+	card.appendChild(cardInfo);
+	cardInfo.appendChild(nameHeader);
+	cardInfo.appendChild(userName);
+	cardInfo.appendChild(location);
+	cardInfo.appendChild(profile);
+	cardInfo.appendChild(followers);
+	cardInfo.appendChild(following);
+	cardInfo.appendChild(bio);
+	profile.appendChild(gitHubLink);
+
+	return card;
+
+}
+
